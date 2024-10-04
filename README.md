@@ -33,7 +33,12 @@ This project implements a real-time audio emotion recognition system using WebSo
 
 4. Install the required packages:
    ```
-   pip install fastapi uvicorn websockets pyaudio numpy
+   pip install -r requirements.txt
+   ```
+
+   In Linux, please install the following packages before running the above command (in case it doesn't work):
+   ```
+   sudo apt-get install libasound-dev portaudio19-dev libportaudio2 libportaudiocpp0
    ```
 
 ## Usage
