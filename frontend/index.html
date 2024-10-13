@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition - Agentifai</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/agentifai-logo-white.svg" alt="Agentifai Logo">
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Emotion Recognition</h1>
+            <div class="circle" id="animatedCircle">
+                <p id="circleText">We are reinventing the interaction between people and technology</p>
+                <div class="wave-container">
+                    <!-- We'll generate these waves dynamically in JavaScript -->
+                </div>
+            </div>
+            <button id="recordButton">Start Recording</button>
+            <div id="result">
+                <p>Volume: <span id="volume">-</span></p>
+                <p>Emotion: <span id="emotion" class="emotion">-</span></p>
+                <p>Confidence: <span id="confidence" class="confidence">-</span></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Agentifai © 2024</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

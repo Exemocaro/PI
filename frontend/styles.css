@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #000;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+header {
+    background-color: #000;
+    padding: 1rem 2rem;
+}
+
+.logo img {
+    height: 50px; /* Increased from 40px to 50px */
+    max-width: 100%;
+    display: block;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #000;
+}
+
+.circle {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 2px solid #8B7FD3;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#circleText {
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.wave-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wave {
+    width: 2px; /* Reduced from 3px to 2px to fit more waves */
+    background-color: #8B7FD3;
+    margin: 0;
+    height: 10%;
+    transition: height 0.1s ease;
+}
+
+#recordButton {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #8B7FD3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#recordButton:hover {
+    background-color: #7A6EC3;
+}
+
+#result {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+}
+
+.emotion {
+    font-weight: bold;
+    color: #8B7FD3;
+}
+
+.confidence {
+    font-style: italic;
+    color: #666;
+}
+
+footer {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
