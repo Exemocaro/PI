@@ -1,12 +1,14 @@
 # Real-time Audio Emotion Recognition
 
-This project implements a real-time audio emotion recognition system using WebSocket communication between a Python client and server.
+This project implements a real-time audio emotion recognition system using WebSocket communication between a Python Flask server and a web-based client.
 
 ## Project Structure
 
-- `client.py`: Records audio from the microphone and sends it to the server for emotion analysis.
-- `server.py`: Receives audio data, processes it, and returns emotion predictions.
-- `emotion_predictor.py`: Contains the logic for predicting emotions based on audio volume.
+- `app.py`: Flask server that handles WebSocket connections, processes audio data, and returns emotion predictions.
+- `audio_processing.py`: Contains the logic for processing audio data and predicting emotions.
+- `templates/index.html`: The main HTML file for the web interface.
+- `static/script.js`: Client-side JavaScript for handling audio recording and WebSocket communication.
+- `static/styles.css`: CSS file for styling the web interface.
 
 ## Installation
 
@@ -36,23 +38,37 @@ This project implements a real-time audio emotion recognition system using WebSo
    pip install -r requirements.txt
    ```
 
-   In Linux, please install the following packages before running the above command (in case it doesn't work):
+   On Linux, you may need to install the following packages before running the above command:
    ```
    sudo apt-get install libasound-dev portaudio19-dev libportaudio2 libportaudiocpp0
    ```
 
 ## Usage
 
-1. Start the server:
+1. Start the Flask server:
    ```
-   python server.py
-   ```
-
-2. In a separate terminal, run the client:
-   ```
-   python client.py
+   python app.py
    ```
 
-3. Speak into your microphone. The client will display the predicted emotion and confidence level in real-time.
+2. Open a web browser and navigate to `http://localhost:5000` (or the URL displayed in the console).
 
-4. Press Ctrl+C to stop the client.
+3. Click the "Start Recording" button and speak into your microphone.
+
+4. The web interface will display the predicted emotion and confidence level in real-time.
+
+5. Click the "Stop Recording" button to end the session.
+
+## Requirements
+
+- Python 3.7+
+- Flask
+- Flask-SocketIO
+- NumPy
+- PyTorch
+- Transformers
+
+See `requirements.txt` for a full list of dependencies.
+
+## Note
+
+This project uses the browser's built-in audio capabilities and WebSocket for real-time communication. Ensure your browser supports these features and that you grant the necessary permissions for microphone access when prompted.
