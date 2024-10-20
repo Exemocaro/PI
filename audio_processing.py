@@ -2,48 +2,123 @@ import numpy as np
 import wave
 import io
 import json
-from transformers import Wav2Vec2Processor, HubertForSequenceClassification, AutoFeatureExtractor
 import torch
+import torch.nn as nn
+from transformers import WavLMModel, Wav2Vec2FeatureExtractor
+import gdown
+import os
 
 SAMPLE_RATE = 16000
-MODEL_NAME = "superb/hubert-base-superb-er"
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-feature_extractor = AutoFeatureExtractor.from_pretrained(MODEL_NAME)
-model = HubertForSequenceClassification.from_pretrained(MODEL_NAME)
+# Define the mapping from class indices to emotion labels
+id2label = {
+    0: 'Anger',
+    1: 'Disgust',
+    2: 'Fear',
+    3: 'Happy',
+    4: 'Neutral',
+    5: 'Sad'
+}
 
+# Initialize the feature extractor with wavlm-base
+feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained("microsoft/wavlm-base")
+
+# Initialize the WavLM model with wavlm-base
+wavlm_model = WavLMModel.from_pretrained("microsoft/wavlm-base").to(DEVICE)
+
+# Define the custom model class
+class WavLMClassifierWithRNN(nn.Module):
+    def __init__(self, wavlm_model, hidden_size=256, rnn_type='GRU'):
+        super(WavLMClassifierWithRNN, self).__init__()
+        self.wavlm = wavlm_model
+        self.hidden_size = hidden_size
+
+        # Define the RNN layer
+        if rnn_type == 'GRU':
+            self.rnn = nn.GRU(
+                input_size=wavlm_model.config.hidden_size,
+                hidden_size=hidden_size,
+                batch_first=True
+            )
+        else:
+            self.rnn = nn.LSTM(
+                input_size=wavlm_model.config.hidden_size,
+                hidden_size=hidden_size,
+                batch_first=True
+            )
+
+        # Define the classification layer
+        self.classifier = nn.Linear(hidden_size, 6)  # Assuming 6 emotion classes
+
+    def forward(self, input_values):
+        # Get the hidden states from WavLM
+        with torch.no_grad():
+            outputs = self.wavlm(input_values)
+            hidden_states = outputs.last_hidden_state
+
+        # Pass through the RNN
+        rnn_output, _ = self.rnn(hidden_states)
+
+        # Aggregate the RNN outputs (e.g., by averaging)
+        rnn_output = rnn_output.mean(dim=1)
+
+        # Get the logits from the classifier
+        logits = self.classifier(rnn_output)
+        return logits
+
+file_id = '1cc7V6thKP6-fxQN2nhMLq2j1qG5COgtt'
+output_path = 'wavlm_rnn_model.pt'
+if not os.path.exists(output_path):
+    url = f'https://drive.google.com/uc?id={file_id}'
+    gdown.download(url, output_path, quiet=False)
+
+
+# Instantiate the model and load the trained weights
+model = WavLMClassifierWithRNN(wavlm_model).to(DEVICE)
+checkpoint = torch.load(output_path, map_location=DEVICE)
+model.load_state_dict(checkpoint['model_state_dict'])
+model.eval()  # Set the model to evaluation mode
 
 def pcm_to_wav(pcm_data: bytes) -> bytes:
-    """Converte PCM para formato WAV."""
+    """Convert PCM data to WAV format."""
     wav_buffer = io.BytesIO()
     with wave.open(wav_buffer, 'wb') as wav_file:
-        wav_file.setnchannels(1)  # Canal mono
-        wav_file.setsampwidth(2)  # 16 bits
+        wav_file.setnchannels(1)  # Mono channel
+        wav_file.setsampwidth(2)  # 16 bits per sample
         wav_file.setframerate(SAMPLE_RATE)
         wav_file.writeframes(pcm_data)
     wav_buffer.seek(0)
     return wav_buffer.read()
 
 def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
-    """Processa um chunk de áudio e analisa com a rede neural."""
-    #wav_data = pcm_to_wav(pcm_data)
+    """Process an audio chunk and perform emotion recognition."""
+    # Extract features from the audio chunk
+    inputs = feature_extractor(
+        pcm_data,
+        sampling_rate=SAMPLE_RATE,
+        return_tensors="pt",
+        padding=True
+    )
+    input_values = inputs['input_values'].to(DEVICE)
 
-    #Analise rede neuronal: Input array
-    inputs = feature_extractor(pcm_data, sampling_rate=SAMPLE_RATE, return_tensors="pt", padding = True)
+    # Perform inference with the model
     with torch.no_grad():
-        logits = model(**inputs).logits
-    
+        logits = model(input_values)
+
+    # Get the predicted emotion and confidence
     predict_id = torch.argmax(logits, dim=-1).item()
-    emotion = model.config.id2label[predict_id]
+    emotion = id2label[predict_id]
     confidence = torch.softmax(logits, dim=-1)[0][predict_id].item()
-    
-    #Converte a confiança para percentagem
+
+    # Convert confidence to percentage
     confidence_percent = round(confidence * 100, 2)
-    
-    # Retorne o resultado em formato JSON com o timestamp
+
+    # Return the result as a JSON string with the timestamp
     response = {
         "timestamp": timestamp,
         "emotion": emotion,
         "confidence": confidence_percent
     }
-    
+
     return json.dumps(response)
