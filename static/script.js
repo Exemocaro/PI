@@ -76,7 +76,8 @@ async function startRecording() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         console.log("Microphone access granted");
         
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Create an AudioContext with a sample rate of 16,000 Hz
+        audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
         source = audioContext.createMediaStreamSource(stream);
         processor = audioContext.createScriptProcessor(1024, 1, 1);
 
