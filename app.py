@@ -1,3 +1,5 @@
+import eventlet
+import eventlet.wsgi
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import numpy as np
@@ -6,7 +8,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode="eventlet")
 
 BUFFER_DURATION = 5  # Seconds
 HALF_BUFFER = BUFFER_DURATION // 2
@@ -54,4 +56,4 @@ def handle_audio_data(data):
 
 if __name__ == '__main__':
     print("Starting Flask-SocketIO server")
-    socketio.run(app, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5001)
