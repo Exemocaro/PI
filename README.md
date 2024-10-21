@@ -45,12 +45,15 @@ This project implements a real-time audio emotion recognition system using WebSo
 
 ## Usage
 
-1. Start the Flask server:
+1. Dockerfile build:
    ```
-   python app.py
+   docker build -t pi .   
    ```
-
-2. Open a web browser and navigate to `http://localhost:5000` (or the URL displayed in the console).
+2. Run the docker image
+   ```
+   docker run -p 5001:5001 pi
+   ```
+2. Open a web browser and navigate to `http://localhost:5001` (or the URL displayed in the console).
 
 3. Click the "Start Recording" button and speak into your microphone.
 
