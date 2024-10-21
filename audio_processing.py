@@ -80,16 +80,17 @@ checkpoint = torch.load(output_path, map_location=DEVICE)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()  # Set the model to evaluation mode
 
-def pcm_to_wav(pcm_data: bytes) -> bytes:
-    """Convert PCM data to WAV format."""
-    wav_buffer = io.BytesIO()
-    with wave.open(wav_buffer, 'wb') as wav_file:
-        wav_file.setnchannels(1)  # Mono channel
-        wav_file.setsampwidth(2)  # 16 bits per sample
-        wav_file.setframerate(SAMPLE_RATE)
-        wav_file.writeframes(pcm_data)
-    wav_buffer.seek(0)
-    return wav_buffer.read()
+#LEGACY CODE - SE NÃO USAR NO FINAL, RETIRAR!!
+# def pcm_to_wav(pcm_data: bytes) -> bytes:
+#     """Convert PCM data to WAV format."""
+#     wav_buffer = io.BytesIO()
+#     with wave.open(wav_buffer, 'wb') as wav_file:
+#         wav_file.setnchannels(1)  # Mono channel
+#         wav_file.setsampwidth(2)  # 16 bits per sample
+#         wav_file.setframerate(SAMPLE_RATE)
+#         wav_file.writeframes(pcm_data)
+#     wav_buffer.seek(0)
+#     return wav_buffer.read()
 
 def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
     """Process an audio chunk and perform emotion recognition."""

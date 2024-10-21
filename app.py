@@ -9,8 +9,12 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 BUFFER_DURATION = 5  # Seconds
+HALF_BUFFER = BUFFER_DURATION // 2
 BUFFER_SIZE = SAMPLE_RATE * BUFFER_DURATION
+HALF_BUFFER_SIZE = SAMPLE_RATE * HALF_BUFFER
+
 audio_buffer = np.array([], dtype=np.float32)
+overlap_buffer = np.array([], dtype=np.float32)
 
 @app.route('/')
 def index():
@@ -26,18 +30,26 @@ def handle_disconnect():
 
 @socketio.on('audio_data')
 def handle_audio_data(data):
-    global audio_buffer
+    global audio_buffer, overlap_buffer
     
     audio_chunk = np.frombuffer(data, dtype=np.float32)
     audio_buffer = np.concatenate((audio_buffer, audio_chunk))
 
     if len(audio_buffer) >= BUFFER_SIZE:
-        buffer_to_process = audio_buffer[:BUFFER_SIZE]
-        audio_buffer = audio_buffer[BUFFER_SIZE:]
+        buffer_to_process = np.concatenate((overlap_buffer, audio_buffer[:BUFFER_SIZE]))
 
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        #Salvar os 2.5s finais para proxima iteração
+        overlap_buffer = audio_buffer[HALF_BUFFER_SIZE:BUFFER_SIZE]
+
+        audio_buffer = audio_buffer[HALF_BUFFER_SIZE:] #Remover os primeiros 2.5s
+
+        #Processar o Buffer
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         result = process_audio_chunk(buffer_to_process, timestamp)
-        print(f"Emotion result: {result}")
+        
+        print(f"Emotion result: {result}") #TESTE - Não deve ficar na versão final!!
+        
+        #Emissão dos resultados
         emit('emotion_result', result)
 
 if __name__ == '__main__':
