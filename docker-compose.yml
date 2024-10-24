@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .  # The Dockerfile is in the current directory
+      dockerfile: Dockerfile  # Reference to your Dockerfile
+    ports:
+      - "5001:5001"  # Map port 5000 on the host to port 5000 in the container
+    environment:
+      - PYTHONUNBUFFERED=1  # Ensure output is flushed immediately
+    volumes:
+      - .:/app  # Mount the current directory on the host to /app in the container
+    command: python app.py  # Command to start your Python application
