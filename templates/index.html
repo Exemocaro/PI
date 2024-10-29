@@ -6,6 +6,7 @@
     <title>Emotion Recognition</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body>
     <header>
@@ -23,12 +24,18 @@
                 <div id="circleText">Start Recording</div>
             </div>
 
-            <button id="recordButton">Start Recording</button>
-
-            <div id="result">
-                <p>Emotion: <span id="emotion" class="emotion">-</span></p>
-                <p>Confidence: <span id="confidence" class="confidence">-</span></p>
+            <div class="controls-container">
+                <button id="recordButton">Start Recording</button>
+                <div id="result">
+                    <p>Emotion: <span id="emotion" class="emotion">-</span></p>
+                    <p>Confidence: <span id="confidence" class="confidence">-</span></p>
+                </div>
             </div>
+
+            <div class="chart-container">
+                <canvas id="emotionChart"></canvas>
+            </div>
+            
         </div>
     </main>
 

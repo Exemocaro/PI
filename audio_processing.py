@@ -93,7 +93,10 @@ model.eval()  # Set the model to evaluation mode
 #     return wav_buffer.read()
 
 def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
-    """Process an audio chunk and perform emotion recognition."""
+    """Process an audio chunk and perform emotion recognition.
+    
+    Returns confidence values for all emotions along with the predicted emotion.
+    """
     # Extract features from the audio chunk
     inputs = feature_extractor(
         pcm_data,
@@ -107,19 +110,24 @@ def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
     with torch.no_grad():
         logits = model(input_values)
 
-    # Get the predicted emotion and confidence
-    predict_id = torch.argmax(logits, dim=-1).item()
-    emotion = id2label[predict_id]
-    confidence = torch.softmax(logits, dim=-1)[0][predict_id].item()
-
-    # Convert confidence to percentage
-    confidence_percent = round(confidence * 100, 2)
+    # Apply softmax to get probabilities for all emotions
+    probabilities = torch.softmax(logits, dim=-1)[0]
+    
+    # Get the predicted emotion (highest probability)
+    predict_id = torch.argmax(probabilities).item()
+    predicted_emotion = id2label[predict_id]
+    
+    # Create dictionary of all emotions and their confidence percentages
+    emotion_confidences = {
+        id2label[i]: round(probabilities[i].item() * 100, 2)
+        for i in range(len(id2label))
+    }
 
     # Return the result as a JSON string with the timestamp
     response = {
         "timestamp": timestamp,
-        "emotion": emotion,
-        "confidence": confidence_percent
+        "predicted_emotion": predicted_emotion,
+        "emotions": emotion_confidences
     }
 
     return json.dumps(response)

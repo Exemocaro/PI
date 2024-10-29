@@ -49,7 +49,7 @@ def handle_audio_data(data):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         result = process_audio_chunk(buffer_to_process, timestamp)
         
-        print(f"Emotion result: {result}") #TESTE - Não deve ficar na versão final!!
+        print(f"Network result: {result}")
         
         #Emissão dos resultados
         emit('emotion_result', result)

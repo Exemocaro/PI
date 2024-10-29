@@ -82,6 +82,8 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    height: fit-content;
+    margin: 0; /* Remove any existing margins */
 }
 
 #recordButton:hover {
@@ -91,11 +93,6 @@ h1 {
 #result {
     margin-top: 2rem;
     font-size: 1.2rem;
-}
-
-.emotion {
-    font-weight: bold;
-    color: #8B7FD3;
 }
 
 .confidence {
@@ -111,4 +108,48 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+.emotion {
+    font-weight: bold;
+    font-size: 1.4em;
+    transition: color 0.3s ease;
+}
+
+.confidence {
+    font-style: italic;
+    color: #666;
+    font-size: 1.2em;
+}
+
+.chart-container {
+    width: 80%;
+    margin: 2rem auto;
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.controls-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem auto;
+    width: fit-content;
+}
+
+#result {
+    margin: 0;
+    font-size: 1.2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 8px;
+    min-width: 300px;
+}
+
+#result p {
+    margin: 0.5rem 0;
 }

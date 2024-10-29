@@ -17,6 +17,31 @@ let audioContext;
 let source;
 let processor;
 
+// FOR THE EMOTION CHART
+let emotionChart;
+const maxDataPoints = 20;
+const emotions = ['Anger', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad'];
+const emotionColors = {
+    'Anger': '#FF4444',    // Red
+    'Disgust': '#9C27B0',  // Purple
+    'Fear': '#FFA726',     // Orange
+    'Happy': '#4CAF50',    // Green
+    'Neutral': '#2196F3',  // Blue
+    'Sad': '#607D8B'       // Grey-Blue
+};
+
+const emotionData = {
+    labels: [],
+    datasets: emotions.map(emotion => ({
+        label: emotion,
+        data: [],
+        borderColor: emotionColors[emotion],
+        tension: 0.4,
+        fill: false,
+        borderWidth: 2
+    }))
+};
+
 // Create waves
 for (let i = 0; i < NUM_WAVES; i++) {
     const wave = document.createElement('div');
@@ -53,6 +78,8 @@ async function startRecording() {
         console.log('Connected to server');
     });
     
+    
+    // Update the socket.on('emotion_result') handler in your startRecording function:
     socket.on('emotion_result', (data) => {
         console.log('Received emotion result:', data);
         let parsedData;
@@ -63,9 +90,36 @@ async function startRecording() {
             return;
         }
         
-        if (parsedData && parsedData.emotion && parsedData.confidence !== undefined) {
-            emotionSpan.textContent = parsedData.emotion;
-            confidenceSpan.textContent = parsedData.confidence.toFixed(2) + '%';
+        if (parsedData && parsedData.predicted_emotion && parsedData.emotions) {
+            // Update the main emotion display
+            const mainEmotion = parsedData.predicted_emotion;
+            const mainConfidence = parsedData.emotions[mainEmotion];
+            
+            emotionSpan.textContent = mainEmotion;
+            confidenceSpan.textContent = mainConfidence.toFixed(2) + '%';
+            
+            // Change the emotion text color to match the line color
+            emotionSpan.style.color = emotionColors[mainEmotion];
+
+            const timestamp = new Date(parsedData.timestamp);
+            const formattedTime = timestamp.toTimeString().split(' ')[0];
+                        
+            // Update chart data
+            emotionData.labels.push(formattedTime);
+            
+            // Update each emotion's dataset
+            emotions.forEach((emotion, index) => {
+                emotionData.datasets[index].data.push(parsedData.emotions[emotion]);
+            });
+            
+            // Keep only the last maxDataPoints data points
+            if (emotionData.labels.length > maxDataPoints) {
+                emotionData.labels.shift();
+                emotionData.datasets.forEach(dataset => dataset.data.shift());
+            }
+            
+            // Update chart
+            emotionChart.update();
         } else {
             console.error('Invalid emotion result data:', parsedData);
         }
@@ -116,6 +170,11 @@ function stopRecording() {
     if (audioContext) {
         audioContext.close();
     }
+
+    // Clear chart data
+    emotionData.labels = [];
+    emotionData.datasets.forEach(dataset => dataset.data = []);
+    emotionChart.update();
 }
 
 function animateWaves() {
@@ -128,4 +187,51 @@ function animateWaves() {
     animationId = requestAnimationFrame(animateWaves);
 }
 
+// EMOTION CHART ------------------------------------------------------------
+
+// Update the initChart function
+function initChart() {
+    const ctx = document.getElementById('emotionChart').getContext('2d');
+    emotionChart = new Chart(ctx, {
+        type: 'line',
+        data: emotionData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Confidence (%)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false
+            }
+        }
+    });
+}
+
+// Call initChart when the page loads
+document.addEventListener('DOMContentLoaded', initChart);
 console.log("script.js loaded");

@@ -1,13 +1,13 @@
 # Real-time Audio Emotion Recognition
 
-This project implements a real-time audio emotion recognition system using WebSocket communication between a Python Flask server and a web-based client.
+This project implements a real-time audio emotion recognition system using WebSocket communication between a Python Flask server and a web-based client. The system provides visual feedback and real-time graphing of emotion predictions.
 
 ## Project Structure
 
 - `app.py`: Flask server that handles WebSocket connections, processes audio data, and returns emotion predictions.
-- `audio_processing.py`: Contains the logic for processing audio data and predicting emotions.
+- `audio_processing.py`: Contains the logic for processing audio data and predicting emotions using WavLM and RNN models.
 - `templates/index.html`: The main HTML file for the web interface.
-- `static/script.js`: Client-side JavaScript for handling audio recording and WebSocket communication.
+- `static/script.js`: Client-side JavaScript for handling audio recording, WebSocket communication, and chart visualization.
 - `static/styles.css`: CSS file for styling the web interface.
 
 ## Installation
@@ -45,21 +45,36 @@ This project implements a real-time audio emotion recognition system using WebSo
 
 ## Usage
 
-1. Dockerfile build:
-   ```
-   docker build -t pi .   
-   ```
-2. Run the docker image
-   ```
-   docker run -p 5001:5001 pi
+### Option 1: Run with Flask
+
+1. Start the Flask server:
+   ```bash
+   python app.py
    ```
 2. Open a web browser and navigate to `http://localhost:5001` (or the URL displayed in the console).
 
 3. Click the "Start Recording" button and speak into your microphone.
 
-4. The web interface will display the predicted emotion and confidence level in real-time.
+4. The web interface will display:
+   - Real-time audio visualization
+   - Current predicted emotion and confidence level
+   - A line chart showing the confidence levels of all emotions over time
 
 5. Click the "Stop Recording" button to end the session.
+
+### Option 2: Run with Docker
+
+1. Build the Docker image:
+   ```bash
+   docker build -t pi .
+   ```
+2. Run the Docker container:
+   ```bash
+   docker run -p 5001:5001 pi
+   ```
+3. Open a web browser and navigate to `http://localhost:5001` (or the URL displayed in the console).
+
+4. Follow the same steps as above to use the emotion recognition system.
 
 ## Requirements
 
@@ -69,9 +84,11 @@ This project implements a real-time audio emotion recognition system using WebSo
 - NumPy
 - PyTorch
 - Transformers
+- Chart.js (included via CDN)
+- Socket.IO client (included via CDN)
 
 See `requirements.txt` for a full list of dependencies.
 
 ## Note
 
-This project uses the browser's built-in audio capabilities and WebSocket for real-time communication. Ensure your browser supports these features and that you grant the necessary permissions for microphone access when prompted.
+This project uses the browser's built-in audio capabilities and WebSocket for real-time communication. Ensure your browser supports these features and that you grant the necessary permissions for microphone access when prompted. The visualization features work best in modern browsers with good WebSocket support.
