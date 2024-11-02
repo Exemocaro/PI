@@ -5,6 +5,7 @@ from flask_socketio import SocketIO, emit
 import numpy as np
 from audio_processing import process_audio_chunk, SAMPLE_RATE
 from datetime import datetime
+import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -47,9 +48,12 @@ def handle_audio_data(data):
 
         #Processar o Buffer
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        inicial_time = time.time()
         result = process_audio_chunk(buffer_to_process, timestamp)
-        
-        print(f"Network result: {result}")
+        end_time = time.time()
+
+        exec_time = round((end_time - inicial_time), 3)
+        print(f"Network result: {result}. Executado em: {exec_time}s")
         
         #Emissão dos resultados
         emit('emotion_result', result)
