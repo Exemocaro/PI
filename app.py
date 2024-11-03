@@ -9,7 +9,7 @@ import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-socketio = SocketIO(app, async_mode="eventlet")
+socketio = SocketIO(app, async_mode="eventlet", max_http_buffer_size=10**7)
 
 BUFFER_DURATION = 5  # Seconds
 HALF_BUFFER = BUFFER_DURATION // 2

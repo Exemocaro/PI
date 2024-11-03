@@ -72,7 +72,7 @@ async function startRecording() {
     animateWaves();
 
     // Connect to SocketIO
-    socket = io();
+    socket = io({ transports: ['websocket'] });
     
     socket.on('connect', () => {
         console.log('Connected to server');
