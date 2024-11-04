@@ -20,14 +20,15 @@ let processor;
 // FOR THE EMOTION CHART
 let emotionChart;
 const maxDataPoints = 20;
-const emotions = ['Anger', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad'];
+const emotions = ['Anger', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Silence'];
 const emotionColors = {
     'Anger': '#FF4444',    // Red
     'Disgust': '#9C27B0',  // Purple
     'Fear': '#FFA726',     // Orange
     'Happy': '#4CAF50',    // Green
     'Neutral': '#2196F3',  // Blue
-    'Sad': '#607D8B'       // Grey-Blue
+    'Sad': '#607D8B',       // Grey-Blue
+    'Silence': '#000000'    // BLACK
 };
 
 const emotionData = {

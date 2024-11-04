@@ -46,17 +46,30 @@ def handle_audio_data(data):
 
         audio_buffer = audio_buffer[HALF_BUFFER_SIZE:] #Remover os primeiros 2.5s
 
-        #Processar o Buffer
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        inicial_time = time.time()
-        result = process_audio_chunk(buffer_to_process, timestamp)
-        end_time = time.time()
+        #Detect Silence
+        silence_threshold = 0.01
+        rms = np.sqrt(np.mean(buffer_to_process**2))
 
-        exec_time = round((end_time - inicial_time), 3)
-        print(f"Network result: {result}. Executado em: {exec_time}s")
-        
-        #Emissão dos resultados
-        emit('emotion_result', result)
+        timestamp_slc = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        if rms < silence_threshold:
+            response = {
+                "timestamp": timestamp_slc,
+                "predicted_emotion": "Silence",
+                "emotions": {'Anger': 0, 'Disgust': 0, 'Fear': 0, 'Happy': 0, 'Neutral': 0, 'Sad': 0, 'Silence': 100}
+            }
+            emit('emotion_result', response)
+        else:
+            #Processar o Buffer
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            inicial_time = time.time()
+            result = process_audio_chunk(buffer_to_process, timestamp)
+            end_time = time.time()
+
+            exec_time = round((end_time - inicial_time), 3)
+            print(f"Network result: {result}. Executado em: {exec_time}s")
+            
+            #Emissão dos resultados
+            emit('emotion_result', result)
 
 if __name__ == '__main__':
     print("Starting Flask-SocketIO server")
