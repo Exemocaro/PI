@@ -23,3 +23,6 @@ market -> product -> tech
 stores depois enviam esse documento? ou disseram que iam ver
 
 
+<link rel="icon" href="https://agentifai.com/wp-content/uploads/2019/10/cropped-ag-favicon-32x32.png" sizes="32x32">
+<link rel="icon" href="https://agentifai.com/wp-content/uploads/2019/10/cropped-ag-favicon-192x192.png" sizes="192x192">
+
