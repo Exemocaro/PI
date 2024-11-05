@@ -123,6 +123,8 @@ def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
         for i in range(len(id2label))
     }
 
+    emotion_confidences["Silence"] = 0
+
     # Return the result as a JSON string with the timestamp
     response = {
         "timestamp": timestamp,

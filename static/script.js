@@ -27,8 +27,8 @@ const emotionColors = {
     'Fear': '#FFA726',     // Orange
     'Happy': '#4CAF50',    // Green
     'Neutral': '#2196F3',  // Blue
-    'Sad': '#607D8B',       // Grey-Blue
-    'Silence': '#000000'    // BLACK
+    'Sad': '#607D8B',      // Grey-Blue
+    'Silence': '#000000'   // Black
 };
 
 const emotionData = {
@@ -173,9 +173,9 @@ function stopRecording() {
     }
 
     // Clear chart data
-    emotionData.labels = [];
-    emotionData.datasets.forEach(dataset => dataset.data = []);
-    emotionChart.update();
+    //emotionData.labels = [];
+    //emotionData.datasets.forEach(dataset => dataset.data = []);
+    //emotionChart.update();
 }
 
 function animateWaves() {
