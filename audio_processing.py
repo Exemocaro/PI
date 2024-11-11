@@ -76,7 +76,7 @@ if not os.path.exists(output_path):
 
 # Instantiate the model and load the trained weights
 model = WavLMClassifierWithRNN(wavlm_model).to(DEVICE)
-checkpoint = torch.load(output_path, map_location=DEVICE)
+checkpoint = torch.load(output_path, map_location=DEVICE, weights_only=True)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()  # Set the model to evaluation mode
 
