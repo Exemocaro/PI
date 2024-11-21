@@ -10,15 +10,7 @@ fileInput.accept = 'audio/*';
 fileInput.style.display = 'none';
 document.body.appendChild(fileInput);
 
-const uploadButton = document.createElement('button');
-uploadButton.textContent = 'Upload Audio';
-uploadButton.style.backgroundColor = '#8B7FD3';
-uploadButton.style.padding = '10px 20px';
-uploadButton.style.color = 'white';
-uploadButton.style.border = 'none';
-uploadButton.style.borderRadius = '5px';
-uploadButton.style.cursor = 'pointer';
-uploadButton.style.marginLeft = '10px';
+const uploadButton = document.getElementById('uploadButton');
 
 recordButton.parentNode.appendChild(uploadButton);
 
@@ -27,6 +19,7 @@ const WAVE_WIDTH = 2;
 const NUM_WAVES = Math.floor(CIRCLE_DIAMETER / WAVE_WIDTH);
 let waves = [];
 
+let isRecording = false;
 let isPlaying = false;
 let socket;
 let animationId;
@@ -97,7 +90,7 @@ recordButton.addEventListener('click', () => {
         } else {
             stopPlayback();
         }
-    } else if (!isPlaying) {
+    } else if (!isRecording) {
         startRecording();
     } else {
         stopRecording();
@@ -252,6 +245,7 @@ async function startRecording() {
     }
 }
 
+
 function stopRecording() {
     console.log("Stopping recording...");
     isRecording = false;
@@ -274,6 +268,10 @@ function stopRecording() {
         audioContext.close();
     }
 
+    // Clear chart data
+    emotionData.labels = [];
+    emotionData.datasets.forEach(dataset => dataset.data = []);
+    emotionChart.update();
 }
 
 function handleEmotionResult(data) {

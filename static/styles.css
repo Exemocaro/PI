@@ -90,6 +90,23 @@ h1 {
     background-color: #7A6EC3;
 }
 
+#uploadButton {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #8B7FD3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: fit-content;
+    margin-left: 10px;
+}
+
+#uploadButton:hover {
+    background-color: #7A6EC3;
+}
+
 #result {
     margin-top: 2rem;
     font-size: 1.2rem;

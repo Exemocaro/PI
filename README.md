@@ -9,6 +9,7 @@ This project implements a real-time audio emotion recognition system using WebSo
 - `templates/index.html`: The main HTML file for the web interface.
 - `static/script.js`: Client-side JavaScript for handling audio recording, WebSocket communication, and chart visualization.
 - `static/styles.css`: CSS file for styling the web interface.
+- `samples/`: Contains sample audio files for testing the emotion recognition system.
 
 ## Installation
 
@@ -91,4 +92,4 @@ See `requirements.txt` for a full list of dependencies.
 
 ## Note
 
-This project uses the browser's built-in audio capabilities and WebSocket for real-time communication. Ensure your browser supports these features and that you grant the necessary permissions for microphone access when prompted. The visualization features work best in modern browsers with good WebSocket support.
+This project uses the browser's built-in audio capabilities and WebSocket for real-time communication. Ensure your browser supports these features and that you grant the necessary permissions for microphone access when prompted. The visualization features work best in modern browsers with good WebSocket support. Samples were taken from the [Sample Focus Website](https://samplefocus.com/).
