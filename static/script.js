@@ -269,9 +269,9 @@ function stopRecording() {
     }
 
     // Clear chart data
-    emotionData.labels = [];
-    emotionData.datasets.forEach(dataset => dataset.data = []);
-    emotionChart.update();
+    //emotionData.labels = [];
+    //motionData.datasets.forEach(dataset => dataset.data = []);
+    //emotionChart.update();
 }
 
 function handleEmotionResult(data) {
