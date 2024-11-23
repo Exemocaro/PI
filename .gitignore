@@ -163,3 +163,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 wavlm_rnn_model.pt
+whisper_base3_rnn_model.pt
