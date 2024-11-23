@@ -1,4 +1,6 @@
 const recordButton = document.getElementById('recordButton');
+const discardButton = document.getElementById('discardButton');
+const uploadButton = document.getElementById('uploadButton');
 const emotionSpan = document.getElementById('emotion');
 const confidenceSpan = document.getElementById('confidence');
 const circleText = document.getElementById('circleText');
@@ -9,8 +11,6 @@ fileInput.type = 'file';
 fileInput.accept = 'audio/*';
 fileInput.style.display = 'none';
 document.body.appendChild(fileInput);
-
-const uploadButton = document.getElementById('uploadButton');
 
 recordButton.parentNode.appendChild(uploadButton);
 
@@ -78,6 +78,10 @@ fileInput.addEventListener('change', async (event) => {
         recordButton.textContent = 'Play Audio';
         recordButton.style.backgroundColor = '#4CAF50';
         recordButton.disabled = false;
+        
+        // Show discard button, hide upload button
+        discardButton.style.display = 'inline-block';
+        uploadButton.style.display = 'none';
     } catch (error) {
         console.error('Error loading audio file:', error);
     }
@@ -96,6 +100,8 @@ recordButton.addEventListener('click', () => {
         stopRecording();
     }
 });
+
+discardButton.addEventListener('click', discardAudio);
 
 async function startPlayback() {
     console.log("Starting playback...");
@@ -245,7 +251,6 @@ async function startRecording() {
     }
 }
 
-
 function stopRecording() {
     console.log("Stopping recording...");
     isRecording = false;
@@ -272,6 +277,21 @@ function stopRecording() {
     //emotionData.labels = [];
     //motionData.datasets.forEach(dataset => dataset.data = []);
     //emotionChart.update();
+}
+
+function discardAudio() {
+    if (isPlaying) {
+        stopPlayback();
+    }
+    
+    audioBuffer = null;
+    recordButton.textContent = 'Start Recording';
+    recordButton.style.backgroundColor = '#8B7FD3';
+    discardButton.style.display = 'none';
+    uploadButton.style.display = 'inline-block';
+    
+    // Reset the file input
+    fileInput.value = '';
 }
 
 function handleEmotionResult(data) {
