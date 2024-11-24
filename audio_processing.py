@@ -84,7 +84,7 @@ def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
     )
 
     input_features = inputs['input_features'].to(DEVICE)
-    print(f"Input features shape before padding/truncating: {input_features.shape}")
+    
 
     # Padronizar as input features para comprimento 3000 na dimensão temporal
     seq_len = input_features.shape[2]
@@ -101,8 +101,6 @@ def process_audio_chunk(pcm_data: np.ndarray, timestamp: float) -> str:
         # Truncar para 3000 frames
         input_features = input_features[:, :, :3000]
     # Caso contrário, já tem comprimento 3000 e não precisa fazer nada
-
-    print(f"Input features shape after padding/truncating: {input_features.shape}")
 
     # Perform inference with the model
     with torch.no_grad():
