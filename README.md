@@ -89,7 +89,7 @@ This project implements a real-time audio emotion recognition system using WebSo
    ```bash
    docker compose up
    ```
-2. Open a web browser and navigate to ``http://localhost:5001` (or the URL displayed in the console).`
+2. Open a web browser and navigate to `http://localhost:5001` (or the URL displayed in the console).
 
 ## Requirements
 
