@@ -10,17 +10,17 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Update and upgrade
+# Update and upgrade the OS
 RUN apt-get update && apt-get install -y curl
 
-# Install local model
-RUN curl -L -o wavlm_rnn_model.pt 'https://drive.google.com/file/d/1cKG2sQImKSdPWv9AUZIEslRO97Rg1ozr/view?usp=sharing'
+# Download the local model (update URL if necessary)
+RUN curl -L -o whisper_base3_rnn_model.pt 'https://drive.google.com/uc?export=download&id=1cKG2sQImKSdPWv9AUZIEslRO97Rg1ozr'
 
-# Make port 5000 available to the world outside this container (or your port)
-EXPOSE 5000
+# Make port 5001 available to the outside world
+EXPOSE 5001
 
 # Define environment variable (optional, useful for some servers like Flask)
 ENV PYTHONUNBUFFERED=1
 
-# Run the python server file (replace app.py with your script)
-CMD ["python", "app.py"]
+# Run the python server file (run.py)
+CMD ["python", "run.py"]

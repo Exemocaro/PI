@@ -1,27 +1,15 @@
-import eventlet
-import eventlet.wsgi
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
 import numpy as np
-from audio_processing import process_audio_chunk, SAMPLE_RATE
 from datetime import datetime
+from app import socketio
+from app.settings import HALF_BUFFER_SIZE, BUFFER_SIZE, SILENCE_THRESHOLD
+from app.utils import calculate_rms
+from audio_processing import process_audio_chunk
+from flask_socketio import emit
 import time
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-socketio = SocketIO(app, async_mode="eventlet", max_http_buffer_size=10**7)
-
-BUFFER_DURATION = 5  # Seconds
-HALF_BUFFER = BUFFER_DURATION // 2
-BUFFER_SIZE = SAMPLE_RATE * BUFFER_DURATION
-HALF_BUFFER_SIZE = SAMPLE_RATE * HALF_BUFFER
+import json
 
 audio_buffer = np.array([], dtype=np.float32)
 overlap_buffer = np.array([], dtype=np.float32)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 @socketio.on('connect')
 def handle_connect():
@@ -29,6 +17,10 @@ def handle_connect():
 
 @socketio.on('disconnect')
 def handle_disconnect():
+    global audio_buffer, overlap_buffer
+    
+    audio_buffer = np.array([], dtype=np.float32)
+    overlap_buffer = np.array([], dtype=np.float32)   
     print('Client disconnected')
 
 @socketio.on('audio_data')
@@ -47,17 +39,17 @@ def handle_audio_data(data):
         audio_buffer = audio_buffer[HALF_BUFFER_SIZE:] #Remover os primeiros 2.5s
 
         #Detect Silence
-        silence_threshold = 0.01
-        rms = np.sqrt(np.mean(buffer_to_process**2))
+        #silence_threshold = 0.01
+        rms =calculate_rms(buffer_to_process)
 
         timestamp_slc = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        if rms < silence_threshold:
+        if rms < SILENCE_THRESHOLD:
             response = {
                 "timestamp": timestamp_slc,
                 "predicted_emotion": "Silence",
                 "emotions": {'Anger': 0, 'Disgust': 0, 'Fear': 0, 'Happy': 0, 'Neutral': 0, 'Sad': 0, 'Silence': 100}
             }
-            emit('emotion_result', response)
+            emit('emotion_result', json.dumps(response))
         else:
             #Processar o Buffer
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
@@ -70,7 +62,3 @@ def handle_audio_data(data):
             
             #Emissão dos resultados
             emit('emotion_result', result)
-
-if __name__ == '__main__':
-    print("Starting Flask-SocketIO server")
-    socketio.run(app, host="0.0.0.0", port=5001)

@@ -4,7 +4,13 @@ This project implements a real-time audio emotion recognition system using WebSo
 
 ## Project Structure
 
-- `app.py`: Flask server that handles WebSocket connections, processes audio data, and returns emotion predictions.
+- `app/...`: Folder containing all the necessary files to run the server.
+   - `app/__init__.py`: The inicialization of the API.
+   - `app/events.py`: Handle the events of the API like connection and disconection of clients and handles the audio data to send the neural network.
+   - `app/routes.py`: The route for the server, renders the inicial and only page of this API.
+   - `app/settings.py`: Responsible for the global variables of the API, like Sample Rate, Buffer Duration and Silence Threshold.
+   - `app/utils.py`: Handles the others functions necessary for the processing of the audio.
+- `run.py`: Start the server.
 - `audio_processing.py`: Contains the logic for processing audio data and predicting emotions using WavLM and RNN models.
 - `templates/index.html`: The main HTML file for the web interface.
 - `static/script.js`: Client-side JavaScript for handling audio recording, WebSocket communication, and chart visualization.
@@ -50,7 +56,7 @@ This project implements a real-time audio emotion recognition system using WebSo
 
 1. Start the Flask server:
    ```bash
-   python app.py
+   python run.py
    ```
 2. Open a web browser and navigate to `http://localhost:5001` (or the URL displayed in the console).
 
@@ -77,9 +83,17 @@ This project implements a real-time audio emotion recognition system using WebSo
 
 4. Follow the same steps as above to use the emotion recognition system.
 
+### Option 3: Run with Docker-Compose
+
+1. Build the project with the following command:
+   ```bash
+   docker compose up
+   ```
+2. Open a web browser and navigate to ``http://localhost:5001` (or the URL displayed in the console).`
+
 ## Requirements
 
-- Python 3.7+
+- Python 3.10+
 - Flask
 - Flask-SocketIO
 - NumPy

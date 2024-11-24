@@ -7,8 +7,8 @@ import torch.nn as nn
 from transformers import WhisperProcessor, WhisperModel
 import gdown
 import os
+from app.settings import SAMPLE_RATE
 
-SAMPLE_RATE = 16000
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Define the mapping from class indices to emotion labels
