@@ -1,6 +1,6 @@
 # Real-time Audio Emotion Recognition
 
-This project implements a real-time audio emotion recognition system using WebSocket communication between a Python Flask server and a web-based client. The system provides visual feedback and real-time graphing of emotion predictions.
+This project implements a real-time audio emotion recognition system using WebSocket communication between a Python Flask server and a web-based client. The system provides visual feedback and real-time graphing of emotion predictions. It was built in Python 3.10+. All the necessary packages are listed in the `requirements.txt` file.
 
 ## Project Structure
 
@@ -90,19 +90,6 @@ This project implements a real-time audio emotion recognition system using WebSo
    docker compose up
    ```
 2. Open a web browser and navigate to `http://localhost:5001` (or the URL displayed in the console).
-
-## Requirements
-
-- Python 3.10+
-- Flask
-- Flask-SocketIO
-- NumPy
-- PyTorch
-- Transformers
-- Chart.js (included via CDN)
-- Socket.IO client (included via CDN)
-
-See `requirements.txt` for a full list of dependencies.
 
 ## Note
 
