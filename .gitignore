@@ -164,3 +164,4 @@ cython_debug/
 #.idea/
 wavlm_rnn_model.pt
 whisper_base3_rnn_model.pt
+whisper_base6_rnn_model.pt

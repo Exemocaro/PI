@@ -27,7 +27,7 @@ whisper_model = WhisperModel.from_pretrained("openai/whisper-base").to(DEVICE)
 
 # Define the custom model class
 class WhisperClassifierWithRNN(nn.Module):
-    def __init__(self, whisper_model, hidden_size=256, rnn_type='LSTM'):
+    def __init__(self, whisper_model, hidden_size=256, rnn_type='GRU'):
         super(WhisperClassifierWithRNN, self).__init__()
         self.whisper = whisper_model
         self.hidden_size = hidden_size
@@ -57,8 +57,8 @@ class WhisperClassifierWithRNN(nn.Module):
         logits = self.classifier(rnn_output)
         return logits
 
-file_id = '1cKG2sQImKSdPWv9AUZIEslRO97Rg1ozr'
-output_path = 'whisper_base3_rnn_model.pt'
+file_id = '1L9opHfaGeRbXVczSH3BjfM8QuASvfCEC'
+output_path = 'whisper_base6_rnn_model.pt'
 if not os.path.exists(output_path):
     url = f'https://drive.google.com/uc?id={file_id}'
     gdown.download(url, output_path, quiet=False)
