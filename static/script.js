@@ -71,9 +71,30 @@ fileInput.addEventListener('change', async (event) => {
     if (!file) return;
 
     try {
+        // First create AudioContext with default sample rate
+        const tempContext = new (window.AudioContext || window.webkitAudioContext)();
         const arrayBuffer = await file.arrayBuffer();
+        const originalAudioBuffer = await tempContext.decodeAudioData(arrayBuffer);
+        
+        // Create offline context for resampling
+        const offlineContext = new OfflineAudioContext({
+            numberOfChannels: 1,
+            length: Math.ceil(originalAudioBuffer.duration * 16000),
+            sampleRate: 16000
+        });
+
+        // Create buffer source
+        const source = offlineContext.createBufferSource();
+        source.buffer = originalAudioBuffer;
+        source.connect(offlineContext.destination);
+        source.start();
+
+        // Render the resampled audio
+        const resampledBuffer = await offlineContext.startRendering();
+        
+        // Now create the actual AudioContext we'll use for playback
         audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        audioBuffer = resampledBuffer;
         
         recordButton.textContent = 'Play Audio';
         recordButton.style.backgroundColor = '#4CAF50';
@@ -84,6 +105,7 @@ fileInput.addEventListener('change', async (event) => {
         uploadButton.style.display = 'none';
     } catch (error) {
         console.error('Error loading audio file:', error);
+        alert('Error loading audio file. Please ensure the file is a valid audio format and try again.');
     }
 });
 

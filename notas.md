@@ -14,7 +14,8 @@ proposta de valor:
 temos que ter um modelo de negócio, e uma estratégia de negócio!
 ou seja, vender o produto a um cliente, e depois perceber como escalar para mais clientes
 
-template de modelo de negócio (canvas, 9 blocos/dmiensoes, uma imagem da net)
+template de modelo de negócio (canvas, 9 blocos/dimensoes, uma imagem da net)
+    "modelo clássico" tentar preencher todos, mas não é "obrigatório"
 
 tech -> product > market
 ou
@@ -22,7 +23,4 @@ market -> product -> tech
 
 stores depois enviam esse documento? ou disseram que iam ver
 
-
-<link rel="icon" href="https://agentifai.com/wp-content/uploads/2019/10/cropped-ag-favicon-32x32.png" sizes="32x32">
-<link rel="icon" href="https://agentifai.com/wp-content/uploads/2019/10/cropped-ag-favicon-192x192.png" sizes="192x192">
-
+temos o template até/na sexta
