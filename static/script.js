@@ -172,13 +172,22 @@ async function startPlayback() {
     startTime = audioContext.currentTime;
     currentTime = 0;
 
+    let callCount = 0;
     processor.onaudioprocess = (e) => {
         if (isPlaying && !isPaused && socket.connected) {
+            callCount++;
+            console.log({
+                callNumber: callCount,
+                timeStamp: audioContext.currentTime,
+                bufferSize: e.inputBuffer.length,
+                sampleRate: audioContext.sampleRate
+            });
+            
             const audioData = e.inputBuffer.getChannelData(0);
             socket.emit('audio_data', audioData);
         }
     };
-
+    
     source.onended = () => {
         stopPlayback();
     };
@@ -234,9 +243,11 @@ function stopPlayback() {
     }
 
     if (source) {
+        source.onended = null;  // Remove the handler before stopping
         source.stop();
         source.disconnect();
     }
+    
     if (processor) {
         processor.disconnect();
     }
