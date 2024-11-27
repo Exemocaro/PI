@@ -173,7 +173,7 @@ async function startPlayback() {
     currentTime = 0;
 
     processor.onaudioprocess = (e) => {
-        if (isPlaying && socket.connected) {
+        if (isPlaying && !isPaused && socket.connected) {
             const audioData = e.inputBuffer.getChannelData(0);
             socket.emit('audio_data', audioData);
         }
@@ -194,6 +194,11 @@ function pausePlayback() {
         cancelAnimationFrame(animationId);
         pauseButton.textContent = 'Resume';
         waves.forEach(wave => wave.style.height = '10%');
+
+        // Disconnect from socket when paused
+        if (socket) {
+            socket.disconnect();
+        }
     }
 }
 
@@ -201,9 +206,16 @@ function resumePlayback() {
     if (isPlaying && isPaused) {
         console.log("Resuming playback...");
         isPaused = false;
-        source.playbackRate.value = 1; // Restore normal playback
+        source.playbackRate.value = 1; // Resume audio playback
         animateWaves();
         pauseButton.textContent = 'Pause';
+        
+        // Reconnect socket and set up handlers again
+        socket = io({ transports: ['websocket'] });
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+        socket.on('emotion_result', handleEmotionResult);
     }
 }
 
