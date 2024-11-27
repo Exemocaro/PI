@@ -124,6 +124,24 @@ h1 {
     background-color: #ff0000;
 }
 
+#pauseButton {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #FFA500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: fit-content;
+    margin-left: 10px;
+    display: none;
+}
+
+#pauseButton:hover {
+    background-color: #FF8C00;
+}
+
 #result {
     margin-top: 2rem;
     font-size: 1.2rem;

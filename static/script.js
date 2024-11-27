@@ -1,6 +1,7 @@
 const recordButton = document.getElementById('recordButton');
 const discardButton = document.getElementById('discardButton');
 const uploadButton = document.getElementById('uploadButton');
+const pauseButton = document.getElementById('pauseButton');
 const emotionSpan = document.getElementById('emotion');
 const confidenceSpan = document.getElementById('confidence');
 const circleText = document.getElementById('circleText');
@@ -21,6 +22,7 @@ let waves = [];
 
 let isRecording = false;
 let isPlaying = false;
+let isPaused = false;
 let socket;
 let animationId;
 let textHidden = false;
@@ -30,6 +32,8 @@ let processor;
 let audioBuffer;
 let startTime;
 let currentTime = 0;
+
+
 
 const maxDataPoints = 20;
 const emotions = ['Anger', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Silence'];
@@ -61,6 +65,14 @@ for (let i = 0; i < NUM_WAVES; i++) {
     waveContainer.appendChild(wave);
     waves.push(wave);
 }
+
+pauseButton.addEventListener('click', () => {
+    if (isPaused) {
+        resumePlayback();
+    } else {
+        pausePlayback();
+    }
+});
 
 uploadButton.addEventListener('click', () => {
     fileInput.click();
@@ -128,8 +140,11 @@ discardButton.addEventListener('click', discardAudio);
 async function startPlayback() {
     console.log("Starting playback...");
     isPlaying = true;
+    isPaused = false;
     recordButton.textContent = 'Stop';
     recordButton.style.backgroundColor = '#ff4444';
+    pauseButton.style.display = 'inline-block';
+    pauseButton.textContent = 'Pause';
     
     if (!textHidden) {
         circleText.style.opacity = '0';
@@ -171,11 +186,34 @@ async function startPlayback() {
     source.start(0);
 }
 
+function pausePlayback() {
+    if (isPlaying && !isPaused) {
+        console.log("Pausing playback...");
+        isPaused = true;
+        source.playbackRate.value = 0; // This effectively pauses the audio
+        cancelAnimationFrame(animationId);
+        pauseButton.textContent = 'Resume';
+        waves.forEach(wave => wave.style.height = '10%');
+    }
+}
+
+function resumePlayback() {
+    if (isPlaying && isPaused) {
+        console.log("Resuming playback...");
+        isPaused = false;
+        source.playbackRate.value = 1; // Restore normal playback
+        animateWaves();
+        pauseButton.textContent = 'Pause';
+    }
+}
+
 function stopPlayback() {
     console.log("Stopping playback...");
     isPlaying = false;
+    isPaused = false;
     recordButton.textContent = 'Play Audio';
     recordButton.style.backgroundColor = '#4CAF50';
+    pauseButton.style.display = 'none';
     cancelAnimationFrame(animationId);
     waves.forEach(wave => wave.style.height = '10%');
 
@@ -192,11 +230,13 @@ function stopPlayback() {
     }
 }
 
+
 async function startRecording() {
     console.log("Starting recording...");
     isRecording = true;
     recordButton.textContent = 'Stop Recording';
     recordButton.style.backgroundColor = '#ff4444';
+    pauseButton.style.display = 'none'; // Hide pause button during recording
     
     if (!textHidden) {
         circleText.style.opacity = '0';
@@ -311,6 +351,7 @@ function discardAudio() {
     recordButton.style.backgroundColor = '#8B7FD3';
     discardButton.style.display = 'none';
     uploadButton.style.display = 'inline-block';
+    pauseButton.style.display = 'none';
     
     // Reset the file input
     fileInput.value = '';
