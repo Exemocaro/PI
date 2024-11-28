@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN apt-get update && apt-get install -y curl
 
 # Download the local model (update URL if necessary)
-RUN curl -L -o whisper_base3_rnn_model.pt 'https://drive.google.com/file/d/1L9opHfaGeRbXVczSH3BjfM8QuASvfCEC/view?usp=sharing'
+RUN curl -L -o whisper_base3_rnn_model.pt 'https://drive.google.com/file/d/1VAdOwiSE49LmbygmuRFhSuY5qgmIfpx-/view?usp=sharing'
 
 # Make port 5001 available to the outside world
 EXPOSE 5001

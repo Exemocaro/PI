@@ -57,7 +57,7 @@ class WhisperClassifierWithRNN(nn.Module):
         logits = self.classifier(rnn_output)
         return logits
 
-file_id = '1L9opHfaGeRbXVczSH3BjfM8QuASvfCEC'
+file_id = '1VAdOwiSE49LmbygmuRFhSuY5qgmIfpx-'
 output_path = 'whisper_base6_rnn_model.pt'
 if not os.path.exists(output_path):
     url = f'https://drive.google.com/uc?id={file_id}'
