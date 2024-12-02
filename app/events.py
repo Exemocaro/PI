@@ -17,15 +17,14 @@ def handle_connect():
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    global audio_buffer, overlap_buffer
+    global audio_buffer
     
     audio_buffer = np.array([], dtype=np.float32)
-    overlap_buffer = np.array([], dtype=np.float32)   
     print('Client disconnected')
 
 @socketio.on('audio_data')
 def handle_audio_data(data):
-    global audio_buffer, overlap_buffer
+    global audio_buffer
     
     audio_chunk = np.frombuffer(data, dtype=np.float32)
     audio_buffer = np.concatenate((audio_buffer, audio_chunk))
