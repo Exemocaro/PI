@@ -31,15 +31,11 @@ def handle_audio_data(data):
     audio_buffer = np.concatenate((audio_buffer, audio_chunk))
 
     if len(audio_buffer) >= BUFFER_SIZE:
-        buffer_to_process = np.concatenate((overlap_buffer, audio_buffer[:BUFFER_SIZE]))
+        buffer_to_process = audio_buffer[:BUFFER_SIZE]
 
-        #Salvar os 2.5s finais para proxima iteração
-        overlap_buffer = audio_buffer[HALF_BUFFER_SIZE:BUFFER_SIZE]
+        audio_buffer = audio_buffer[HALF_BUFFER_SIZE:] #Remover os primeiros 2s para um Overlap implicito
 
-        audio_buffer = audio_buffer[HALF_BUFFER_SIZE:] #Remover os primeiros 2.5s
-
-        #Detect Silence
-        #silence_threshold = 0.01
+        #Detetar Silence
         rms =calculate_rms(buffer_to_process)
 
         timestamp_slc = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
